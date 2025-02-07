@@ -16,14 +16,26 @@ export class ChoferImplementationRepository extends ChoferRepository {
         super();
     }
 
-     save(params: { id: number; nombre: string; apellido_p: string; apellido_m: string; edad: number; }): Observable<ChoferModel> {
-        return this.http.post<ChoferEntity>('http://localhost:8080/choferes/', {params}).pipe(map(this.choferMapper.mapFrom));
+     save(params: ChoferModel): Observable<ChoferModel> {
+        return this.http.post<ChoferEntity>('http://localhost:8080/choferes/', params).pipe(map(this.choferMapper.mapFrom));
     }
-     getAll(): Observable<ChoferModel> {
-        return this.http.get<ChoferEntity>('http://localhost:8080/choferes/').pipe(map(this.choferMapper.mapFrom))
+
+    getAll(): Observable<ChoferModel[]> {
+        return this.http
+          .get<{ choferes: any[] }>('http://localhost:8080/choferes/') 
+          .pipe(map((response) => {
+            return response.choferes.map((chofer) => ({
+                id: chofer.ID, 
+                nombre: chofer.Nombre, 
+                apellido_p: chofer.Apellido_p, 
+                apellido_m: chofer.Apellido_m, 
+                edad: chofer.Edad, 
+            }));
+        }));
     }
-     update(params: { id: number; nombre: string; apellido_p: string; apellido_m: string; edad: number; }): Observable<ChoferModel> {
-        return this.http.put<ChoferEntity>(`http://localhost:8080/choferes/${params.id}`, {params}).pipe(map(this.choferMapper.mapFrom))
+      
+     update(id: number, params: ChoferModel): Observable<ChoferModel> {
+        return this.http.put<ChoferEntity>(`http://localhost:8080/choferes/${id}`, params).pipe(map(this.choferMapper.mapFrom))
     }
 
      delete(id: number): Observable<ChoferModel> {

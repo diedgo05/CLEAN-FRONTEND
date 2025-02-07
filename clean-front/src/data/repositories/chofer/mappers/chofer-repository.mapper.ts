@@ -5,7 +5,7 @@ import { ChoferEntity } from "../entities/chofer.entity";
 export class ChoferImplementationRepositoryMapper extends Mapper<ChoferEntity,ChoferModel> {
     mapFrom(param: ChoferEntity): ChoferModel {
         return {
-            id: param.id,
+            id: Number(param.id),
             nombre: param.nombre,
             apellido_p: param.apellido_p,
             apellido_m: param.apellido_m,
